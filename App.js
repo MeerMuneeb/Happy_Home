@@ -4,6 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
+import Properties from './screens/Properties';
+import Profile from './screens/Profile';
+import Chats from './screens/Chats';
+import AddProperty from './screens/AddProperty';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -11,7 +15,11 @@ const Tab = createBottomTabNavigator();
 function HomeTab() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="HomeDrawer" component={HomeDrawer} options={{ headerShown: false }}/>
+      <Tab.Screen name="Chats" component={Chats} />
+      <Tab.Screen name=" " component={AddProperty} />
+      <Tab.Screen name="Gallery" component={Properties} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
@@ -19,7 +27,7 @@ function HomeTab() {
 function HomeDrawer() {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="HomeTab" component={HomeTab} />
+      <Drawer.Screen name="Home" component={HomeScreen} />
     </Drawer.Navigator>
   );
 }
@@ -27,7 +35,7 @@ function HomeDrawer() {
 export default function App() {
   return (
     <NavigationContainer>
-      <HomeDrawer />
+      <HomeTab />
     </NavigationContainer>
   );
 }
