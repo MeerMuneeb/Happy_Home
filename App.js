@@ -18,7 +18,7 @@ function HomeTab() {
       <Tab.Screen name="HomeDrawer" component={HomeDrawer} options={{ headerShown: false }}/>
       <Tab.Screen name="Chats" component={Chats} />
       <Tab.Screen name=" " component={AddProperty} />
-      <Tab.Screen name="Gallery" component={Properties} />
+      <Tab.Screen name="Gallery" component={Properties} options={{ headerShown: false }}/>
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );

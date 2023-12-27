@@ -85,7 +85,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container}>
-        <View style={styles.rectangle}/>
+      <View style={styles.rectangle}/>
         <Swiper style={styles.wrapper} containerStyle={styles.swiperContainer} paginationStyle={styles.paginationContainer} dotStyle={styles.dotStyle} activeDotStyle={styles.activeDotStyle}>
           {slides.map((slide, index) => (
             <HomeSlider key={index} {...slide} />
@@ -116,7 +116,7 @@ export default function HomeScreen() {
             <SlideBtn text='villas' onPress={() => console.log('Button pressed for slide 3')} />
           </ScrollView>
           <View style={styles.blank}/>
-        </View>
+      </View>
     </ScrollView>
   );
 }
