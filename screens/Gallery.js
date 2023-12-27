@@ -175,7 +175,7 @@ export default function Gallery1() {
 
 const styles = StyleSheet.create({
   flatListContainer: {
-    paddingBottom: 40, 
+    paddingBottom: 80, 
   },
   blank: {
     height: 10,

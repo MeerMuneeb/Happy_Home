@@ -111,8 +111,8 @@ export default function Properties() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="PropertiesScreen" component={PropertiesScreen} options={{ headerShown: false }}/>
-      {/* <Stack.Screen name="House Gallery" component={Gallery1} /> */}
-      <Stack.Screen name="House Gallery" component={Favourites} />
+      <Stack.Screen name="House Gallery" component={Gallery1} />
+      {/* <Stack.Screen name="House Gallery" component={Favourites} /> */}
     </Stack.Navigator>
   );
 
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   flatListContainer: {
-    paddingBottom: 50, 
+    paddingBottom: 70, 
   },
   headerText: {
     color: '#000',

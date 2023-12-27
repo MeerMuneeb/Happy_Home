@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   flatListContainer: {
-    paddingBottom: 50, 
+    paddingBottom: 80, 
   },
   headerText: {
     color: '#000',

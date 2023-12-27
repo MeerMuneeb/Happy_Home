@@ -46,8 +46,8 @@ const GallerySlider = ({ image, height, width, overlayText, sliderBg, sliderNoBg
         </TouchableOpacity>
         <Text style={styles.heading}>{price}</Text>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
-        <View style={styles.locDate}>
-          <View style={{...styles. locOnly, justifyContent:'space-between'}}>
+        <View style={{...styles.locDate, justifyContent: 'space-between'}}>
+          <View style={styles. locOnly}>
             <Image style={styles.locImg} source={require('../images/loc.png')}/>            
             <Text style={styles.location}>{location}</Text>
           </View>

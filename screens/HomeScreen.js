@@ -123,7 +123,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   blank: {
-    height: 20,
+    height: 70,
   },
   rectangle:{
     height: 30,
