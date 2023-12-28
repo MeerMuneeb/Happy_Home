@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import Properties from './screens/Properties';
@@ -12,6 +12,103 @@ import AddProperty from './screens/AddProperty';
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      {/* Add your profile picture, name, and email here */}
+      <View style={styles.profileContainer}>
+        <Image
+          source={require('./images/account-picture.png')}
+          style={styles.profileImage}
+        />
+        <View style={styles.profileInfoContainer}>
+          <Text style={styles.profileName}>Your Name</Text>
+          <Text style={styles.profileEmail}>your.email@example.com</Text>
+        </View>
+      </View>
+      <DrawerItem
+        label="Home"
+        icon={() => (
+          <Image
+            source={require('./images/drawerhome.png')}
+            style={styles.drawerIcon}
+          />
+        )}
+        onPress={() => props.navigation.navigate('Home')}
+        labelStyle={styles.drawerLabel}
+      />
+      <DrawerItem
+        label="My Properties"
+        icon={() => (
+          <Image
+            source={require('./images/drawerproperties.png')}
+            style={styles.drawerIcon}
+          />
+        )}
+        onPress={() => props.navigation.navigate('MyProperties')}
+        labelStyle={styles.drawerLabel}
+      />
+      <DrawerItem
+        label="Flats/Appartments"
+        icon={() => (
+          <Image
+            source={require('./images/drawerflats.png')}
+            style={{...styles.drawerIcon, }}
+          />
+        )}
+        onPress={() => props.navigation.navigate('Flats')}
+        labelStyle={styles.drawerLabel}
+      />
+      <DrawerItem
+        label="Villas"
+        icon={() => (
+          <Image
+            source={require('./images/drawervillas.png')}
+            style={styles.drawerIcon}
+          />
+        )}
+        onPress={() => props.navigation.navigate('Villas')}
+        labelStyle={styles.drawerLabel}
+      />
+      <View style={styles.blank}/>
+      <DrawerItem
+        label="Messages"
+        icon={() => (
+          <Image
+            source={require('./images/drawerchats.png')}
+            style={styles.drawerIcon}
+          />
+        )}
+        onPress={() => props.navigation.navigate('Messages')}
+        labelStyle={styles.drawerLabel}
+      />
+      <DrawerItem
+        label="Settings"
+        icon={() => (
+          <Image
+            source={require('./images/drawersetting.png')}
+            style={styles.drawerIcon}
+          />
+        )}
+        onPress={() => props.navigation.navigate('Settings')}
+        labelStyle={styles.drawerLabel}
+      />
+      
+      <View style={styles.blank}/>
+      <DrawerItem
+        label="Logout"
+        icon={() => (
+          <Image
+            source={require('./images/drawerlogout.png')}
+            style={styles.drawerIcon}
+          />
+        )}
+        onPress={() => props.navigation.navigate('Logout')}
+        labelStyle={styles.drawerLabel}
+      />
+    </DrawerContentScrollView>
+  );
+}
 function HomeTab() {
   return (
     <Tab.Navigator
@@ -91,8 +188,14 @@ function HomeTab() {
 
 function HomeDrawer() {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Homee" component={HomeScreen} />
+    <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="My Properties" component={HomeScreen} />
+      <Drawer.Screen name="Flats/Appartments" component={HomeScreen}/>
+      <Drawer.Screen name="Villas" component={HomeScreen}/>
+      <Drawer.Screen name="Messages" component={HomeScreen}/>
+      <Drawer.Screen name="Setting" component={HomeScreen}/>
+      <Drawer.Screen name="Logout" component={HomeScreen}/>
     </Drawer.Navigator>
   );
 }
@@ -106,6 +209,9 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  blank:{
+    height: 25,
+  },
   tabBar: {
     height: 70,
     borderTopWidth: 0,
@@ -129,5 +235,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: 6,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    margin: 20
+  },
+  profileImage: {
+    width: 46,
+    height: 46,
+    borderRadius: 40,
+    margin: 5
+  },
+  profileName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#324054',
+  },
+  profileEmail: {
+    fontSize: 12,
+    color: 'gray',
+  },  
+  drawerIcon: {
+    width: 23.017,
+    height: 23.017,   
+    marginStart: 20 
+  },
+  drawerLabel: {
+    color: '#324054',
+    fontFamily: 'Poppins',
+    fontSize: 14.998,
   },
 });
