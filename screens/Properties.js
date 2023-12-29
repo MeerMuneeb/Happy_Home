@@ -1,108 +1,123 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import SortButton from '../components/SortButton';
 import GallerySlider from '../components/GallerySlider';
 import Gallery1 from './Gallery';
-import Favourites from './Favourites';
+import firestore from '@react-native-firebase/firestore';
+
 
 const Stack = createStackNavigator();
 
 export default function Properties() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [properties, setProperties] = useState()
+
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = firestore()
+      .collection('Properties')
+      .onSnapshot(querySnapshot => {
+        const propertiesData = [];
+        querySnapshot.forEach(doc => {
+          propertiesData.push({ id: doc.id, ...doc.data() });
+        });
+        setProperties(propertiesData);
+      });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleSort = (isAscending) => {
     // Handle sorting logic based on the current order (isAscending)
     console.log('Sorting order:', isAscending ? 'Ascending' : 'Descending');
   };
 
-  const slides2 = [
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      collapse: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },  
-  ];
+  // const slides2 = [
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+      
+  //     price: '1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+  //     height: 210,
+  //     width: 152,
+  //     collapse: true,
+  //     borderRadius: 10,
+  //     price: '$1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+  //     height: 210,
+  //     width: 152,
+  //     collapse: true,
+  //     borderRadius: 10,
+  //     price: '$1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+  //     height: 210,
+  //     width: 152,
+  //     collapse: true,
+  //     borderRadius: 10,
+  //     price: '$1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+  //     height: 210,
+  //     width: 152,
+  //     collapse: true,
+  //     borderRadius: 10,
+  //     price: '$1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+  //     height: 210,
+  //     width: 152,
+  //     collapse: true,
+  //     borderRadius: 10,
+  //     price: '$1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  //   {
+  //     image: require('../images/SliderImg1.png'),
+  //     height: 210,
+  //     width: 152,
+  //     collapse: true,
+  //     borderRadius: 10,
+  //     price: '$1000',
+  //     title: '4 Villa flat is awesome and awesome and awesome',
+  //     location: 'New York',
+  //     date: '12/12/2020',
+  //     time: '10:00 AM',
+  //   },  
+  // ];
 
   const goToGallery1 = () => {
     navigation.navigate('House Gallery');
@@ -126,7 +141,13 @@ export default function Properties() {
           </View>
           <View style={styles.search}>
             <View style={styles.searchIcon}><Image source={require('../images/mg.png')}/></View>
-            <TextInput style={styles.searchField} placeholder="Search Properties" placeholderTextColor="#0008"/>
+            <TextInput
+              style={styles.searchField}
+              placeholder="Search Properties"
+              placeholderTextColor="#0008"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
           </View>
           <View style={styles.btn}>
             <TouchableOpacity style={styles.button} onPress={goToGallery1}>
@@ -145,10 +166,24 @@ export default function Properties() {
           <View style={styles.slideContainer}>                  
             <FlatList         
               contentContainerStyle={styles.flatListContainer}   
-              data={slides2}
+              data={properties ? properties.filter(item =>
+                item.title.toLowerCase().includes(searchQuery.toLowerCase())
+              ) : []}
               keyExtractor={(item, index) => index.toString()}
               numColumns={2} 
-              renderItem={({ item }) => <GallerySlider {...item} />}
+              renderItem={({ item }) => <GallerySlider
+                id={item.id}
+                image={item.image}
+                height={210}
+                width={152}
+                collapse={true}
+                borderRadius={10}
+                price={item.price.toString()}
+                title={item.title}
+                location={item.location}
+                date={item.date && item.date.seconds ? new Date(item.date.seconds * 1000).toLocaleDateString() : ''}
+                time={item.date && item.date.seconds ? new Date(item.date.seconds * 1000).toLocaleTimeString() : ''}/>
+              }
               ItemSeparatorComponent={() => <View style={styles.blank}/>}
             />    
           </View>
@@ -169,6 +204,7 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     paddingBottom: 70, 
+    justifyContent: 'center'
   },
   headerText: {
     color: '#000',

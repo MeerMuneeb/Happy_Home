@@ -1,9 +1,11 @@
-import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import Swiper from 'react-native-swiper';
 import HomeSlider from '../components/HomeSlider';
 import { ScrollView } from 'react-native-gesture-handler';
 import HomeSlider2 from '../components/HomeSlider2';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/firestore';
 
 const SlideBtn = ({text, onPress, height}) => {
   return(
@@ -16,7 +18,59 @@ const SlideBtn = ({text, onPress, height}) => {
     </View>
   )
 }
+
+
 export default function HomeScreen() {
+  const [yourProperties, setYourProperties] = useState([]);
+  const [flats, setFlats] = useState([]);
+  const [villas, setVillas] = useState([]);
+
+  useEffect(() => {
+    const unsubscribeYourProperties = firebase
+      .firestore()
+      .collection('Properties')
+      .limit(3) // Limit to 3 properties
+      .onSnapshot(querySnapshot => {
+        const propertiesData = [];
+        querySnapshot.forEach(doc => {
+          propertiesData.push({ id: doc.id, ...doc.data() });
+        });
+        setYourProperties(propertiesData);
+      });
+
+    const unsubscribeFlats = firebase
+      .firestore()
+      .collection('Properties')
+      .where('Category', '==', 'Flat')
+      .limit(3) // Limit to 3 properties
+      .onSnapshot(querySnapshot => {
+        const flatsData = [];
+        querySnapshot.forEach(doc => {
+          flatsData.push({ id: doc.id, ...doc.data() });
+        });
+        setFlats(flatsData);
+      });
+
+    const unsubscribeVillas = firebase
+      .firestore()
+      .collection('Properties')
+      .where('Category', 'in', ['Villa', 'House'])
+      .limit(3) // Limit to 3 properties
+      .onSnapshot(querySnapshot => {
+        const villasData = [];
+        querySnapshot.forEach(doc => {
+          villasData.push({ id: doc.id, ...doc.data() });
+        });
+        setVillas(villasData);
+      });
+
+    return () => {
+      unsubscribeYourProperties();
+      unsubscribeFlats();
+      unsubscribeVillas();
+    };
+  }, []);
+
   const slides = [
     {
       image: require('../images/SliderImg1.png'),
@@ -84,34 +138,36 @@ export default function HomeScreen() {
   ];
 
   return (
+    
     <ScrollView style={styles.container}>
+      {/* <Button style={{height: 50}} title="Add Document to Firestore" onPress={handleAddDocument} /> */}
       <View style={styles.rectangle}/>
         <Swiper style={styles.wrapper} containerStyle={styles.swiperContainer} paginationStyle={styles.paginationContainer} dotStyle={styles.dotStyle} activeDotStyle={styles.activeDotStyle}>
           {slides.map((slide, index) => (
-            <HomeSlider key={index} {...slide} />
+            <HomeSlider key={index} {...slide}/>
           ))}
         </Swiper>
         <View style={styles.contentContainer}>        
           <Text style={styles.heading}>Your Properties</Text>
           <ScrollView style={styles.slideContainer} horizontal={true}>
-            {slides2.map((slide, index) => (
-              <HomeSlider2 key={index} {...slide} />
+            {yourProperties.map((slide, index) => (
+              <HomeSlider2 key={index} image={slide.image} height={135} width={135}/>
             ))}
             <SlideBtn text='properties' onPress={() => console.log('Button pressed for slide 1')} />
           </ScrollView>
 
           <Text style={styles.heading}>Flats and Apartments</Text>
           <ScrollView style={styles.slideContainer} horizontal={true}>
-            {slides2.map((slide, index) => (
-              <HomeSlider2 key={index} {...slide} />
+            {flats.map((slide, index) => (
+              <HomeSlider2 key={index} image={slide.image} height={135} width={135}/>
             ))}
             <SlideBtn text='options' onPress={() => console.log('Button pressed for slide 2')} />
           </ScrollView>
 
           <Text style={styles.heading}>Villas</Text>
           <ScrollView style={styles.slideContainer} horizontal={true}>
-            {slides3.map((slide, index) => (
-              <HomeSlider2 key={index} {...slide}/>
+            {villas.map((slide, index) => (
+              <HomeSlider2 key={index} image={slide.image} height={180} width={270} overlayText={true} text={slide.title}/>
             ))}
             <SlideBtn text='villas' onPress={() => console.log('Button pressed for slide 3')} />
           </ScrollView>

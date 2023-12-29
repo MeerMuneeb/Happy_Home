@@ -1,11 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
 import SortButton from '../components/SortButton';
 import GallerySlider from '../components/GallerySlider';
-
+import firestore from '@react-native-firebase/firestore';
 
 export default function Gallery1() {
-  const [activeButton, setActiveButton] = useState('Flats/Appartments'); 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeButton, setActiveButton] = useState('Flats/Appartments');
+  const [flatsData, setFlatsData] = useState([]);
+  const [villasData, setVillasData] = useState([]);
+
+  useEffect(() => {
+    const unsubscribeFlats = firestore()
+      .collection('Properties')
+      .where('Category', '==', 'Flat')
+      .onSnapshot(querySnapshot => {
+        const flatsData = [];
+        querySnapshot.forEach(doc => {
+          flatsData.push({ id: doc.id, ...doc.data() });
+        });
+        setFlatsData(flatsData);
+      });
+
+    const unsubscribeVillas = firestore()
+      .collection('Properties')
+      .where('Category', 'in', ['Villa', 'House'])
+      .onSnapshot(querySnapshot => {
+        const villasData = [];
+        querySnapshot.forEach(doc => {
+          villasData.push({ id: doc.id, ...doc.data() });
+        });
+        setVillasData(villasData);
+      });
+
+    return () => {
+      unsubscribeFlats();
+      unsubscribeVillas();
+    };
+  }, []);
 
   const switchActiveButton = () => {
     setActiveButton((prev) => (prev === 'Flats/Appartments' ? 'Villas' : 'Flats/Appartments'));
@@ -16,103 +48,18 @@ export default function Gallery1() {
     console.log('Sorting order:', isAscending ? 'Ascending' : 'Descending');
   };
 
-  const flatsData = [
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      sliderNoBg: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },
-    
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      sliderNoBg: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      sliderNoBg: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      sliderNoBg: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 152,
-      sliderNoBg: true,
-      borderRadius: 10,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-      location: 'New York',
-      date: '12/12/2020',
-      time: '10:00 AM',
-    },
-  ];
-
-  const villasData = [
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 320,
-      overlayText: true,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-    },    
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 320,
-      overlayText: true,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-    },
-    {
-      image: require('../images/SliderImg1.png'),
-      height: 210,
-      width: 320,
-      overlayText: true,
-      price: '$1000',
-      title: '4 Villa flat is awesome and awesome and awesome',
-    },
-  ];
-
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.search}>
           <View style={styles.searchIcon}><Image source={require('../images/mg.png')}/></View>
-          <TextInput style={styles.searchField} placeholder="Search Properties" placeholderTextColor="#0008"/>
+          <TextInput
+            style={styles.searchField}
+            placeholder="Search Gallery"
+            placeholderTextColor="#0008"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
         </View>
         <View style={styles.btn}>
           <TouchableOpacity style={[styles.switchBtn, {borderBottomWidth: activeButton === 'Flats/Appartments' ? 2 : 0, borderBottomColor: '#000'}]} onPress={switchActiveButton}>
@@ -150,19 +97,47 @@ export default function Gallery1() {
           {activeButton === 'Flats/Appartments' ? (
             <FlatList
               contentContainerStyle={styles.flatListContainer}
-              data={flatsData}
+              data={flatsData ? flatsData.filter(item =>
+                item.title.toLowerCase().includes(searchQuery.toLowerCase())
+              ) : []}
               keyExtractor={(item, index) => index.toString()}
               numColumns={2}
-              renderItem={({ item }) => <GallerySlider {...item} />}
+              renderItem={({ item }) => <GallerySlider
+                id={item.id}  
+                image={item.image}
+                height={210}
+                width={152}
+                sliderNoBg={true}
+                borderRadius={10}
+                price={item.price.toString()}
+                title={item.title}
+                location={item.location}
+                date={item.date && item.date.seconds ? new Date(item.date.seconds * 1000).toLocaleDateString() : ''}
+                time={item.date && item.date.seconds ? new Date(item.date.seconds * 1000).toLocaleTimeString() : ''}/>
+              }
               ItemSeparatorComponent={() => <View style={styles.blank} />}
               key={activeButton}
             />
           ) : (
             <FlatList
               contentContainerStyle={styles.flatListContainer}
-              data={villasData}
+              data={villasData ? villasData.filter(item =>
+                item.title.toLowerCase().includes(searchQuery.toLowerCase())
+              ) : []}
               keyExtractor={(item, index) => index.toString()}              
-              renderItem={({ item }) => <GallerySlider {...item} />}
+              renderItem={({ item }) => <GallerySlider
+                id={item.id}
+                image={item.image}
+                height={210}
+                width={320}
+                overlayText={true}
+                borderRadius={10}
+                price={item.price.toString()}
+                title={item.title}
+                location={item.location}
+                date={item.date && item.date.seconds ? new Date(item.date.seconds * 1000).toLocaleDateString() : ''}
+                time={item.date && item.date.seconds ? new Date(item.date.seconds * 1000).toLocaleTimeString() : ''}/>
+              }
               ItemSeparatorComponent={() => <View style={styles.blank2} />}
               key={activeButton}
             />
@@ -176,6 +151,7 @@ export default function Gallery1() {
 const styles = StyleSheet.create({
   flatListContainer: {
     paddingBottom: 80, 
+    justifyContent: 'center'
   },
   blank: {
     height: 10,

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "706710653880",
+    "project_id": "happy-home-1d8d2",
+    "storage_bucket": "happy-home-1d8d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706710653880:android:d54e7e337060e85b11dd4d",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVBtCl-FjOUnd-Qq1B0U64nD68enWPTWw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

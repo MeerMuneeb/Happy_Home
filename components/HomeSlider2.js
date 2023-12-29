@@ -1,13 +1,13 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { Modal, Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 
 const HomeSlider2 = ({ image, height, width, overlayText, text }) => (
   <TouchableOpacity style={{...styles.imageContainer, height: height, width: width}}>   
-    <ImageBackground source={image} style={styles.imageBackground}>
+    <ImageBackground source={{uri:image}} style={styles.imageBackground}>
     {overlayText && (
         <View style={styles.overlay}>
           <View style={styles.overlayContent}>
-            <Text style={styles.overlayText}>{text}</Text>
+            <Text style={styles.overlayText} numberOfLines={1}>{text}</Text>
             <Image source={require('../images/play.png')}/>
           </View>
         </View>
